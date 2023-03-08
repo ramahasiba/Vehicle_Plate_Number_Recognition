@@ -1,1 +1,1 @@
-# Vehicle_Number_Plate_Recognition
+# Vehicle_Plate_Number_Recognition
