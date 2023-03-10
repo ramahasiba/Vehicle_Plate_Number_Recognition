@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Car Plate Recognition</title>
+		<link rel="stylesheet" type="text/css" href="../static/css/style.css">
+	</head>
+	<body>
+		<div class="container">
+      <h1>Image Upload and Display</h1>
+      <div class="form-group">
+        <label for="upload">Select an car image to upload:</label>
+        <input type="file" accept="image/*" id="upload" onchange="loadFile(event)">
+      </div>
+      <div class="drop-zone" id="dropZone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+        <p>Drag and drop an image file here, or click to select a file</p>
+      </div>
+      <div class="preview" id="preview">
+        <img id="output">
+      </div>
+      <div id="buttonGroup" class="button-group" style="display: none;">
+        <button id="predictButton" class="button" onclick="predictPlateNumber()">Predict Plate Number</button>
+      </div>
+      </div>
+		<script src="../static/js/index.js"></script>
+	</body>
+</html>
