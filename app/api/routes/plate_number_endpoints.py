@@ -24,8 +24,8 @@ def _search_view(request: Request):
 })   
 
 
-@app.post("/uploadfile")
-async def create_file(_image: UploadFile = File(...)):  
+@app.post("/extract_plate_number")
+async def _extract_plate_number(_image: UploadFile = File(...)):  
     try:
         #image must has the same name of the input in the form.
         # cont = await _image.read() 
