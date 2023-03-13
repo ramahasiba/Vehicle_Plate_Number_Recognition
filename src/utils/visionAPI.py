@@ -8,7 +8,6 @@ from google.cloud.vision_v1 import types
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r'/ServiceAccountToken.json'
 
 
-
 def extract_number(image_path:str):
     """
     Extracts the text and bounding box of a number plate in an image using Google Cloud Vision API's text detection feature.
