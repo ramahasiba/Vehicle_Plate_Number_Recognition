@@ -1,13 +1,15 @@
 from fastapi import FastAPI, File, UploadFile, Form, Body, Request
 from http import HTTPStatus 
 from typing import Dict, List 
-from utils import visionAPI as PNE #Plate Number Extraction 
+from src.utils import visionAPI as PNE #Plate Number Extraction 
+ 
 
 #To delete
 from fastapi import FastAPI
 from fastapi.templating import Jinja2Templates  
 from fastapi.staticfiles import StaticFiles
-
+import os
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r'ServiceAccountToken.json'
 
 #define a template object           
 templates = Jinja2Templates(directory="templates")

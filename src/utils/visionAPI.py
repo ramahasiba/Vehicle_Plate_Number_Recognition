@@ -10,10 +10,11 @@ from fastapi import UploadFile
 from google.cloud import vision_v1
 from google.cloud.vision_v1 import types
 
-
-
+ 
 # google credentials ==> json file 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r'/ServiceAccountToken.json'
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r'ServiceAccountToken.json'
+# r'C://Users//hp//Desktop//Vehicle_Number_Plate_Recognition-//src//utils//ServiceAccountToken.json'
+# os.path.join(os.getcwd(), '/ServiceAccountToken.json.json')
 
 # Create a client object to interact with Google Cloud Vision API
 client = vision_v1.ImageAnnotatorClient()

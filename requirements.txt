@@ -6,3 +6,4 @@ Jinja2==3.1.2
 python-multipart==0.0.6
 opencv-python
 pillow
+python-dotenv==1.0.0
