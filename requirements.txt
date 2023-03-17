@@ -1,2 +1,5 @@
 google-cloud-vision == 3.4.0
 protobuf==4.22.1
+fastapi
+pillow
+opencv-python
