@@ -18,9 +18,8 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r'/ServiceAccountToken.json'
 # Create a client object to interact with Google Cloud Vision API
 client = vision_v1.ImageAnnotatorClient()
 
-def extract_plate_number(image_file:UploadFile)-> dict:
+def extract_plate_number(image_file:UploadFile)-> dict: 
 
-    
     vertices = extract_plate_number_object(image_file)
 
     opened_image = cv2.imread(image_file)
@@ -49,7 +48,10 @@ def extract_plate_number(image_file:UploadFile)-> dict:
     plate_number= extracted['text_annotations'][0]['description'].split('\n')[0].replace(':', '-')
 
 
-    return {"plate_number": plate_number, "image_with_border_on_plate": byte_im1}
+    return {
+        "plate_number": plate_number, 
+        "image_with_border_on_plate": byte_im1
+        }
    
     
 

@@ -29,15 +29,14 @@ async def _extract_plate_number(_image: UploadFile = File(...)) -> Dict:
     #image must has the same name of the input in the form. 
 
     #contructing an image instance  
-    extracted_number = PNE.extract_number(_image)  
+    extracted_number = PNE.extract_plate_number(_image)  
 
     #get image bytes after drawing the border on the licens plate
     # image_as_bytes = PNE.draw_plate_border(extracted_number["number_plate_boundaries"], _image)
     print("Find here the objs: ", extracted_number)
 
     return{
-        "plate_number": extracted_number["number_plate_text"],
-        "plate_boundaries": extracted_number["number_plate_boundaries"], 
-        #    "image_as_bytes": image_as_bytes,
-           } 
+        "plate_number": extracted_number["plate_number"],
+        "image_as_bytes": extracted_number["image_with_border_on_plate"],
+        } 
 
