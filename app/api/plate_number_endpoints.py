@@ -1,15 +1,21 @@
 from fastapi import FastAPI, File, UploadFile, Form, Body, Request
-from fastapi.templating import Jinja2Templates   
-from fastapi.staticfiles import StaticFiles
 from http import HTTPStatus 
 from typing import Dict, List 
 from utils import visionAPI as PNE #Plate Number Extraction 
+
+#To delete
+from fastapi import FastAPI
+from fastapi.templating import Jinja2Templates  
+from fastapi.staticfiles import StaticFiles
+
 
 #define a template object           
 templates = Jinja2Templates(directory="templates")
   
 app = FastAPI() 
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
+#To delete
 
 @app.get('/')  
 def _search_view(request: Request):
