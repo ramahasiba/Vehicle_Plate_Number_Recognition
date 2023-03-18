@@ -9,51 +9,52 @@ from PIL import Image
 from fastapi import UploadFile
 from google.cloud import vision_v1
 from google.cloud.vision_v1 import types
+import re
 
  
 # google credentials ==> json file 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r'ServiceAccountToken.json'
-# r'C://Users//hp//Desktop//Vehicle_Number_Plate_Recognition-//src//utils//ServiceAccountToken.json'
-# os.path.join(os.getcwd(), '/ServiceAccountToken.json.json')
-
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r'ced.json'
+ 
 # Create a client object to interact with Google Cloud Vision API
 client = vision_v1.ImageAnnotatorClient()
 
-def extract_plate_number(image_file:UploadFile)-> dict: 
+async def extract_plate_number(image_file:UploadFile)-> dict: 
+    contents = image_file.read()
+    print(contents)
+    nparr = np.fromstring(contents, np.uint8) 
+    print(nparr)
+    print("Its type: ", type(nparr))
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)  
+    
+    # Extract the bounding box coordinates of the license plate
+    vertices = extract_plate_number_object(nparr)
 
-    vertices = extract_plate_number_object(image_file)
+    # Draw a rectangle around the license plate and encode the image as a byte string
+    image_with_border_on_plate = cv2.rectangle(img, (vertices[0][0],vertices[0][1]),(vertices[2][0],vertices[2][1]),(0, 255, 0), 1)
+    is_success1, im_buf_arr1 = cv2.imencode(".jpg", image_with_border_on_plate)
+    image_byte_im = im_buf_arr1.tobytes()
 
-    opened_image = cv2.imread(image_file)
-    height_, width_, channel = opened_image.shape
-         
-
+    # Crop the license plate from the image and encode it as a byte string
     left = math.ceil(vertices[0][0])
     right = math.ceil(vertices[1][0])
-    top = math.floor(vertices[1][1])
-    buttom = math.ceil(top+vertices[2][1]-vertices[1][1])   
-     
-    
-    
-    cropped_image = opened_image[top:buttom , left:right]
-    
-    image_with_border_on_plate = cv2.rectangle(opened_image, (vertices[0][0],vertices[0][1]),(vertices[2][0],vertices[2][1]),(0, 255, 0), 1)
-    is_success1, im_buf_arr1 = cv2.imencode(".jpg", image_with_border_on_plate)
-    byte_im1 = im_buf_arr1.tobytes()
-  
+    buttom = math.ceil(vertices[1][1])
+    top = math.ceil(buttom + vertices[2][1] - vertices[1][1])
+    cropped_image = img[buttom:top , left:right]
     is_success2, im_buf_arr2 = cv2.imencode(".jpg", cropped_image)
-    byte_im2 = im_buf_arr2.tobytes()
+    croped_byte_im = im_buf_arr2.tobytes()
 
-    extracted = extract_text_from_image(byte_im2)
-    
+    # Extract text from the cropped image and replace any colons with dashes
+    extracted_text = extract_text_from_image(croped_byte_im)
+    text = extracted_text['text_annotations'][0]['description'].replace(":", "-")
 
-    plate_number= extracted['text_annotations'][0]['description'].split('\n')[0].replace(':', '-')
+    # Use regular expressions to extract the license plate number from the text
+    plate_number = re.findall(r'\d{1}-\d{4}-\d{2}|\d{1}-\d{4}-[A-Z]{1}|\d{2}-\d{3}-\d{2}|\d{3}-\d{2}-\d{3}', text)
 
-
+    # Return the license plate number and the image with a border around the license plate
     return {
-        "plate_number": plate_number, 
-        "image_with_border_on_plate": byte_im1
-        }
-   
+    "plate_number": plate_number, 
+    "image_with_border_on_plate": image_byte_im
+    }
     
 
 
@@ -72,7 +73,7 @@ def extract_text_from_image(image_file:bytes)-> dict:
     extracted_text = client.text_detection(image = image)
 
     # Convert the extracted text to a Python dictionary
-    extracted_as_dict= proto.Message.to_dict(extracted_text)
+    extracted_as_dict = proto.Message.to_dict(extracted_text)
 
     return extracted_as_dict
 
