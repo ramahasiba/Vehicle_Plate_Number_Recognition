@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Car Plate Recognition</title>
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css" /> 
+    <title>Vehicle Plate Number Recognition</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" />
+    <script src="../static/js/fetch_api.js"></script>
   </head>
   <body>
-    <form
-      method="post"
-      enctype="multipart/form-data"
-      id="image_form"
-      class="container"
-      action="/extract_plate_number"
-    >
-      <h1>Image Upload and Display</h1>
+    <div class="container">
+      <h1>Vehicle Plate Number Recognition</h1>
       <div class="form-group">
-        <label for="upload_">Select an car image to upload:</label>
-        <input name="my_image" type="file" accept="image/*" id="upload" />
+        <label for="upload">Select a vehicle image to upload:</label>
+        <input
+          type="file"
+          accept="image/*"
+          id="upload"
+          onchange="loadFile(event)"
+        />
       </div>
       <div
         class="drop-zone"
@@ -32,15 +32,13 @@
       <div id="buttonGroup" class="button-group" style="display: none">
         <button
           id="predictButton"
-          type="button"
           class="button"
           onclick="predictPlateNumber()"
         >
           Predict Plate Number
         </button>
       </div>
-    </form>
+    </div>
     <script src="../static/js/index.js"></script>
-    <h2></h2>
   </body>
 </html>

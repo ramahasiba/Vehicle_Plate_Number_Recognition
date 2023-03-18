@@ -27,24 +27,7 @@ var handleDrop = function (event) {
   };
   reader.readAsDataURL(file);
 };
-    
-function predictPlateNumber() {
-  let form_ = document.getElementById("image_form");
-  let uploaded_image = document.getElementById("upload");
-  let formData = new FormData(form_);
-  formData.append("_image", uploaded_image.files[0]);
-
-  fetch("/extract_plate_number", {
-    method: "POST",
-    body: formData,
-  }).then((response) => response.json())
-    .then((result) => { 
-      console.log("Success:", result);
-      return result;
-    })
-    .catch((error) => {
-		alert('Something went wrong, please try again.')
-      console.error("Error:", error);
-    });
-}
- 
+// var predictPlateNumber = function() {
+// 	// TODO: implement plate number prediction logic
+// 	alert('Plate number prediction is not implemented yet!');
+// };
