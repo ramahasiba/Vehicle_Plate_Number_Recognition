@@ -15,7 +15,11 @@
         <p>Drag and drop an image file here, or click to select a file</p>
       </div>
       <div class="preview" id="preview">
-        <img id="output">
+        <div id="output"></div>
+        <script>
+          var byteArray = []
+          displayImage(byteArray, 'output');
+        </script>
       </div>
       <div id="buttonGroup" class="button-group" style="display: none;">
         <button id="predictButton" class="button" onclick="predictPlateNumber()">Predict Plate Number</button>
