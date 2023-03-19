@@ -24,19 +24,4 @@ var handleDrop = function(event) {
 		document.getElementById('buttonGroup').style.display = 'flex';
 	};
 	reader.readAsDataURL(file);
-};
-var predictPlateNumber = function() {
-	// TODO: implement plate number prediction logic
-	alert('Plate number prediction is not implemented yet!');
-};
-
-function displayImage(byteArray, elementId) {
-	// Convert byte array to base64-encoded string
-	var base64String = btoa(String.fromCharCode.apply(null, byteArray));
-	
-	// Create image tag with base64-encoded string as src attribute
-	var imgTag = '<img src="data:image/jpeg;base64,' + base64String + '"/>';
-	
-	// Set innerHTML of specified HTML element to the image tag
-	document.getElementById(elementId).innerHTML = imgTag;
-  }
+}; 
