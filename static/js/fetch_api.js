@@ -1,4 +1,4 @@
-function predictPlateNumber() {
+async function predictPlateNumber() {
   //   let form_ = document.getElementById("image_form");
   let uploaded_image = document.getElementById("upload");
   let formData = new FormData();
@@ -9,13 +9,12 @@ function predictPlateNumber() {
     method: "POST",
     body: formData,
   })
-    .then((response) => response.json())
-    .then((result) => {
-      console.log("Success:", result);
-      return result;
+    .then(async (response) => {
+      res = await response.json();
+      console.log("response: ", res.image_as_bytes);
+      console.log("response: ", typeof res.image_as_bytes);
     })
     .catch((error) => {
       alert("Something went wrong, please try again.");
-      console.error("Error:", error);
     });
 }

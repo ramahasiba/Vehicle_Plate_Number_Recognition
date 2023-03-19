@@ -12,7 +12,7 @@ from google.cloud import vision_v1
 from google.cloud.vision_v1 import types
 import urllib.request
 import re
-
+from google.protobuf.json_format import MessageToJson
  
 # google credentials ==> json file 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r'ced.json'
@@ -20,7 +20,7 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r'ced.json'
 # Create a client object to interact with Google Cloud Vision API
 client = vision_v1.ImageAnnotatorClient()
 
-def extract_plate_number(image_file:UploadFile)-> dict:
+def extract_plate_number(image:np.ndarray)-> dict:
 
     """
     Extracts the license plate number from an image file and returns 
@@ -34,18 +34,27 @@ def extract_plate_number(image_file:UploadFile)-> dict:
             - 'image_with_border_on_plate': A byte string representing the image with a 
                 border around the license plate.
     """
+    
+    # vertices = extract_plate_number_object(image)
+    # file_name= image_file.filename
+    # Open the image file and read its contents as bytes
+    # opened_image = open(("./images/" + file_name), 'rb')
+    # content = opened_image.read()    
+    # print(opened_image)
+    # print("con: ", type(content))    
+    
 
     # Load the image 
-    image = cv2.imread(image_file)
+    # image = cv2.imread(image_file)
 
     # Extract the bounding box coordinates of the license plate
     vertices = extract_plate_number_object(image)
-
+   
     # Draw a rectangle around the license plate and encode the image as a byte string
-    image_with_border_on_plate = cv2.rectangle(image, (vertices[0][0],vertices[0][1]),(vertices[2][0],vertices[2][1]),(0, 255, 0), 1)
+    image_with_border_on_plate = cv2.rectangle(image, (vertices[0][0],vertices[0][1]),(vertices[2][0],vertices[2][1]),(0, 255, 0), 5)
     is_success1, im_buf_arr1 = cv2.imencode(".jpg", image_with_border_on_plate)
     image_byte_im = im_buf_arr1.tobytes()
-
+    # print("image_byte_im type:  ", type(image_byte_im), "  ", image_byte_im)
     # Crop the license plate from the image and encode it as a byte string
     left = math.ceil(vertices[0][0])
     right = math.ceil(vertices[1][0])
@@ -53,13 +62,16 @@ def extract_plate_number(image_file:UploadFile)-> dict:
     top = math.ceil(buttom + vertices[2][1] - vertices[1][1])   
     cropped_image = image[buttom:top , left:right]
     is_success2, im_buf_arr2 = cv2.imencode(".jpg", cropped_image)
+    # print("im_buf_arr2 type:  ", type(im_buf_arr2), "  ", im_buf_arr2)
     croped_byte_im = im_buf_arr2.tobytes()
+    print("im_buf_arr2 type:  ", type(croped_byte_im))
 
     # Extract text from the cropped image and replace any colons with dashes    
     extracted_text = extract_text_from_image(croped_byte_im)
+    
     text = extracted_text['text_annotations'][0]['description'].replace(":", "-")
     
-    # Use regular expressions to extract the license plate number from the text
+    # # # Use regular expressions to extract the license plate number from the text
     plate_number = re.findall(r'\d{1}-\d{4}-\d{2}|\d{1}-\d{4}-[A-Z]{1}|\d{2}-\d{3}-\d{2}|\d{3}-\d{2}-\d{3}', text)
 
     # Return the license plate number and the image with a border around the license plate
@@ -86,13 +98,13 @@ def extract_text_from_image(image_file:bytes)-> dict:
     
     
     # Create a Vision API Image object with the image content
-    image = vision_v1.types.Image(content= image_file)
-    
+    image = types.Image(content= image_file)
+    # 
     # Use the client object to send the image for text detection
-    extracted_text = client.text_detection(image = image)
+    extracted_text = client.text_detection(image = image)  
 
     # Convert the extracted text to a Python dictionary
-    extracted_as_dict= proto.Message.to_dict(extracted_text)
+    extracted_as_dict = proto.Message.to_dict(extracted_text) 
 
     return extracted_as_dict
 
@@ -148,6 +160,7 @@ def extract_plate_number_object(image_array:np.ndarray)-> list:
     
     return plate_bounding
 
+# print(extract_plate_number("./images/WhatsApp_Image_2023-03-15_at_2.42.39_PM_1.jpeg"))
 
 
 

@@ -27,7 +27,3 @@ var handleDrop = function (event) {
   };
   reader.readAsDataURL(file);
 };
-// var predictPlateNumber = function() {
-// 	// TODO: implement plate number prediction logic
-// 	alert('Plate number prediction is not implemented yet!');
-// };
