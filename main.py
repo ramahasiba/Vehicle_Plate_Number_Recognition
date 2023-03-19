@@ -2,10 +2,7 @@ import uvicorn as uvicorn
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from routes import plate_number_extraction_endpoits 
-import os
-
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r'ced.json'
-
+ 
 app = FastAPI()
 
 app.include_router(router=plate_number_extraction_endpoits.router)
