@@ -11,8 +11,8 @@ async function predictPlateNumber() {
   })
     .then(async (response) => {
       res = await response.json();
-      console.log("response: ", res.image_as_bytes);
-      console.log("response: ", typeof res.image_as_bytes);
+      console.log("response: ", res.plate_number);
+      console.log("response: ", typeof res.plate_number);
     })
     .catch((error) => {
       alert("Something went wrong, please try again.");

@@ -33,19 +33,7 @@ def extract_plate_number(image:np.ndarray)-> dict:
             - 'plate_number': The extracted license plate number.
             - 'image_with_border_on_plate': A byte string representing the image with a 
                 border around the license plate.
-    """
-    
-    # vertices = extract_plate_number_object(image)
-    # file_name= image_file.filename
-    # Open the image file and read its contents as bytes
-    # opened_image = open(("./images/" + file_name), 'rb')
-    # content = opened_image.read()    
-    # print(opened_image)
-    # print("con: ", type(content))    
-    
-
-    # Load the image 
-    # image = cv2.imread(image_file)
+    """  
 
     # Extract the bounding box coordinates of the license plate
     vertices = extract_plate_number_object(image)
@@ -63,9 +51,8 @@ def extract_plate_number(image:np.ndarray)-> dict:
     cropped_image = image[buttom:top , left:right]
     is_success2, im_buf_arr2 = cv2.imencode(".jpg", cropped_image)
     # print("im_buf_arr2 type:  ", type(im_buf_arr2), "  ", im_buf_arr2)
-    croped_byte_im = im_buf_arr2.tobytes()
-    print("im_buf_arr2 type:  ", type(croped_byte_im))
-
+    croped_byte_im = im_buf_arr2.tobytes() 
+    
     # Extract text from the cropped image and replace any colons with dashes    
     extracted_text = extract_text_from_image(croped_byte_im)
     
@@ -73,7 +60,7 @@ def extract_plate_number(image:np.ndarray)-> dict:
     
     # # # Use regular expressions to extract the license plate number from the text
     plate_number = re.findall(r'\d{1}-\d{4}-\d{2}|\d{1}-\d{4}-[A-Z]{1}|\d{2}-\d{3}-\d{2}|\d{3}-\d{2}-\d{3}', text)
-
+ 
     # Return the license plate number and the image with a border around the license plate
     return {"plate_number": plate_number, "image_with_border_on_plate": image_byte_im}
    
@@ -160,7 +147,11 @@ def extract_plate_number_object(image_array:np.ndarray)-> list:
     
     return plate_bounding
 
-# print(extract_plate_number("./images/WhatsApp_Image_2023-03-15_at_2.42.39_PM_1.jpeg"))
+
+def save_image(image_bytes: bytes, image_name: str) -> None:
+    file_location = f"images/{image_name}"
+    with open(file_location, "wb") as file_object:
+        file_object.write(image_bytes)
 
 
 
