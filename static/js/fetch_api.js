@@ -3,8 +3,10 @@ async function predictPlateNumber() {
   let uploaded_image = document.getElementById("upload");
   let formData = new FormData();
   formData.append("my_image", uploaded_image.files[0]);
+ 
   let img_tag = document.getElementById("output");
   let plate_number_p_tag = document.getElementById("plate_number");
+ 
   fetch("/extract_plate_number", {
     method: "POST",
     body: formData,
