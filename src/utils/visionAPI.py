@@ -8,31 +8,27 @@ import re
 from google.cloud import vision_v1
 from google.cloud.vision_v1 import types
 
+ 
 # google credentials ==> json file 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r'/ServiceAccountToken.json'
- 
 
 # Create a client object to interact with Google Cloud Vision API
 client = vision_v1.ImageAnnotatorClient()
 
 def extract_plate_number(image:np.ndarray)-> dict:
- 
- """
+    """
     Extracts the license plate number from an image and returns it along with the image
     with a border around the plate.
- 
 
     Parameters:
         image (np.ndarray): A numpy array containing the image.
 
     Returns:
         A dictionary with the following keys:
- 
             - 'plate_number': The extracted license plate number as a string.
             - 'image_with_border_on_plate': A byte string representing the image. 
     """
   
- 
 
     # Extract the bounding box coordinates of the license plate
     vertices = extract_plate_number_object(image)
@@ -41,7 +37,8 @@ def extract_plate_number(image:np.ndarray)-> dict:
     image_with_border_on_plate = cv2.rectangle(image, (vertices[0][0],vertices[0][1]),(vertices[2][0],vertices[2][1]),(0, 255, 0), 5)
     is_success1, im_buf_arr1 = cv2.imencode(".jpg", image_with_border_on_plate)
     image_byte_im = im_buf_arr1.tobytes()
- 
+
+    
     # Crop the license plate from the image and encode it as a byte string
     left = math.ceil(vertices[0][0])
     right = math.ceil(vertices[1][0])
@@ -49,17 +46,14 @@ def extract_plate_number(image:np.ndarray)-> dict:
     top = math.ceil(buttom + vertices[2][1] - vertices[1][1])   
     cropped_image = image[buttom:top , left:right]
     is_success2, im_buf_arr2 = cv2.imencode(".jpg", cropped_image)
- 
     croped_byte_im = im_buf_arr2.tobytes() 
- 
+
     # Extract text from the cropped image and replace any colons with dashes    
     extracted_text = extract_text_from_image(croped_byte_im)
-    
     text = extracted_text['text_annotations'][0]['description'].replace(":", "-")
     
- 
+
     # Use regular expressions to extract the license plate number from the text
- 
     plate_number = re.findall(r'\d{1}-\d{4}-\d{2}|\d{1}-\d{4}-[A-Z]{1}|\d{2}-\d{3}-\d{2}|\d{3}-\d{2}-\d{3}', text)
  
     # Return the license plate number and the image with a border around the license plate
@@ -148,14 +142,9 @@ def extract_plate_number_object(image_array:np.ndarray)-> list:
     return plate_bounding
 
 
-def save_image(image_bytes: bytes, image_name: str) -> None:
-    file_location = f"images/{image_name}"
-    with open(file_location, "wb") as file_object:
-        file_object.write(image_bytes)
-
 
 def save_image(image_bytes: bytes, image_name: str) -> None:
-     """
+    """
     Saves an image file to the 'images' directory with the specified name.
 
     Parameters:
@@ -174,6 +163,5 @@ def save_image(image_bytes: bytes, image_name: str) -> None:
         file_object.write(image_bytes)
 
     
-
 
 

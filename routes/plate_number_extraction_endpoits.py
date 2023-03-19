@@ -25,6 +25,7 @@ async def _extract_plate_number(my_image: UploadFile = File(...)) -> Dict:
     uploaded_image_bytes = await my_image.read()
  
     file_name = my_image.filename 
+    
     PNE.save_image(uploaded_image_bytes, file_name)
     
     #load the image
