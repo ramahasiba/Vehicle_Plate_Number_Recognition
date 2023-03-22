@@ -30,7 +30,7 @@ async def _extract_plate_number(my_image: UploadFile = File(...)) -> Dict:
     
     #load the image
     image = cv2.imread("./images/" + file_name)  
-
+    print("image: ", image)
     plate_info = PNE.extract_plate_number(image)   
     
     PNE.save_image(plate_info["image_with_border_on_plate"], file_name)
